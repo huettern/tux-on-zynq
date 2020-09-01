@@ -98,3 +98,10 @@ run-fsbl: $(FSBL) $(PS7INIT_TCL)
 	$(XSCT) scripts/jtag_run_elf.tcl $(FSBL)
 run-uboot: $(UBOOT_ELF) $(PS7INIT_TCL)
 	$(XSCT) scripts/jtag_run_elf.tcl $(UBOOT_ELF)
+
+
+################################################################################
+# SDCARD utilities
+sdcard: $(BOOTBIN) $(UBOOT_SCR) $(UBOOT_UENV)
+	mkdir -p build/$(NAME).sdcard
+	cp -v $(BOOTBIN) $(UBOOT_SCR) $(UBOOT_UENV) build/$(NAME).sdcard

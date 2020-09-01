@@ -11,10 +11,10 @@ $(BOOTBIF):
 	test -e $(BIT) && echo "  $(BIT)" >> $(BOOTBIF) || :
 
 	# [ ] second stage bootloader
-	test -e $(UBOOT) && echo "  [load=$(UBOOT_LOAD),startup=$(UBOOT_STARTUP)] $(UBOOT)" >> $(BOOTBIF) || :
+	echo "  [load=$(UBOOT_LOAD),startup=$(UBOOT_STARTUP)] $(UBOOT)" >> $(BOOTBIF)
 
 	@echo "}" >> $(BOOTBIF)
 
 # Generate actual boot binary
-$(BOOTBIN): $(BOOTBIF)
+$(BOOTBIN): $(BOOTBIF) $(FSBL) $(UBOOT)
 	bootgen -image $(BOOTBIF) -w -o i $@
