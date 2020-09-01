@@ -65,6 +65,35 @@ The root dts `zynq-7000.dtsi` included by `zturn_7010.dts` defines the Zynq's in
 
 Xilinx's Zynq TRM UG585 specifies the ethernet controller at `e000_b000` which coincides with the definition of `gem0`. `gem0` is a label for `ethernet@e000b000` that we can later use to add devices to the ethernet controller.
 
+From this declaration we find that `#address-cells = <1>` meaning that any child-node must define a `reg` with one address cell and zero size cells `#size-cells = <0>`. The PHY address is specified in the datasheet. In my case, the address can be configured with package pins, but the schematic doesn't show this connection. After running u-boot without the reg declaration, the `mii info` command listed the PHY:
+
+```
+PHY 0x03: OUI = 0x0885, Model = 0x22, Rev = 0x02, 100baseT, FDX
+```
+
+A read at the device identifier address, shows the correct phy:
+```
+zturn> mii read 3 0x2-0x3
+addr=03 reg=02 data=0022
+addr=03 reg=03 data=1622
+```
+
+We can now append information to the `gem0` node to get the PHY running:
+
+```dts
+&gem0 {
+	status = "okay";
+	phy-mode = "rgmii-id";
+	phy-handle = <&ethernet_phy>;
+
+	ethernet_phy: ethernet-phy@0 {
+		reg = <3>;
+		compatible = "micrel,ksz9031";
+		device_type = "ethernet-phy";
+	};
+};
+```
+
 
 ### JTAG debugging in console
 The `ps7_init.tcl` can be extracted from the `xsa` zip file. Some commands can be found [here](https://www.xilinx.com/html_docs/xilinx2017_4/SDK_Doc/xsct/use_cases/xsct_use_cases.html).
