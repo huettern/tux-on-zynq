@@ -35,5 +35,8 @@ $(UBOOT): $(UBOOT_REPO)
 		CROSS_COMPILE=$(UBOOT_CROSS_COMPILE) all
 	cp $</u-boot.bin $@
 
+$(UBOOT_ELF): $(UBOOT)
+	cp $(UBOOT_REPO)/u-boot.elf $(dir $@)	
+
 clean-uboot-repo:
 	$(RM) $(UBOOT_REPO)

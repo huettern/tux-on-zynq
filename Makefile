@@ -51,11 +51,13 @@ TEST 	= echo main
 ################################################################################
 # Output files
 XSA   		= build/$(NAME).xsa
+PS7INIT_TCL	= build/ps7_init.tcl
 FSBL_PROJ	= build/$(NAME).fsbl
 FSBL   		= build/$(NAME).fsbl/executable.elf
 BOOTBIN 	= build/$(NAME).boot/boot.bin
 BOOTBIF 	= build/$(NAME).boot/boot.bif
 UBOOT 		= build/$(NAME).uboot/u-boot.bin
+UBOOT_ELF	= build/$(NAME).uboot/u-boot.elf
 
 ################################################################################
 # Errors
@@ -86,3 +88,11 @@ BOOTBIN_DIR = bootbin
 include $(BOOTBIN_DIR)/bootbin.make
 bootbin: $(BOOTBIN)
 bootbif: $(BOOTBIF)
+
+
+################################################################################
+# JTAG utilities
+run-fsbl: $(FSBL) $(PS7INIT_TCL)
+	$(XSCT) scripts/jtag_run_elf.tcl $(FSBL)
+run-uboot: $(UBOOT_ELF) $(PS7INIT_TCL)
+	$(XSCT) scripts/jtag_run_elf.tcl $(UBOOT_ELF)

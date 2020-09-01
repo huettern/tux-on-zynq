@@ -32,7 +32,8 @@
 	phy-handle = <&ethernet_phy>;
 
 	ethernet_phy: ethernet-phy@0 {
-		reg = <0>;
+		reg = <3>;
+		compatible = "micrel,ksz9031";
 		device_type = "ethernet-phy";
 	};
 };

@@ -6,6 +6,9 @@ $(XSA):
 	# Args: xsa xpr
 	$(VIVADO) -source $(FSBL_DIR)/xsa.tcl -tclargs $(XSA) $(XPR)
 
+$(PS7INIT_TCL): $(XSA)
+	unzip -o $(XSA) $(notdir $(PS7INIT_TCL)) -d build
+
 ################################################################################
 # Create first stage bootloader
 $(FSBL_PROJ): $(XSA)
