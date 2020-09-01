@@ -27,7 +27,7 @@ $(UBOOT_REPO): $(UBOOT_TAR)
 	sed -i '/^dtb-$$(CONFIG_ARCH_ZYNQ).*/a $(patsubst %.dts,%.dtb,$(notdir $(UBOOT_DTS))) \\' $@/arch/arm/dts/Makefile
 
 # configure uboot
-uboot: $(UBOOT)
+uboot: $(UBOOT) $(UBOOT_SCR) $(UBOOT_UENV)
 $(UBOOT): $(UBOOT_REPO)
 	make -C $< ARCH=arm $(notdir $(UBOOT_DEFCONFIG))
 	make -C $< ARCH=arm CFLAGS="$(UBOOT_CFLAGS)" \
@@ -40,3 +40,11 @@ $(UBOOT_ELF): $(UBOOT)
 
 clean-uboot-repo:
 	$(RM) $(UBOOT_REPO)
+
+# Creates the boot.scr file that gets loaded by u boot
+$(UBOOT_SCR): boards/$(BOARD)/$(UBOOT_SCR_SRC)
+	mkimage -A arm -T script -O linux -C none -d boards/$(BOARD)/$(UBOOT_SCR_SRC) $(UBOOT_SCR)
+
+# uEnv.txt file
+$(UBOOT_UENV): boards/$(BOARD)/$(UBOOT_UENV_SRC)
+	cp boards/$(BOARD)/$(UBOOT_UENV_SRC) $(UBOOT_UENV)

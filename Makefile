@@ -58,6 +58,8 @@ BOOTBIN 	= build/$(NAME).boot/boot.bin
 BOOTBIF 	= build/$(NAME).boot/boot.bif
 UBOOT 		= build/$(NAME).uboot/u-boot.bin
 UBOOT_ELF	= build/$(NAME).uboot/u-boot.elf
+UBOOT_SCR	= build/$(NAME).uboot/boot.scr
+UBOOT_UENV	= build/$(NAME).uboot/uEnv.txt
 
 ################################################################################
 # Errors
