@@ -72,6 +72,10 @@ UBOOT_SCR	= build/$(NAME).uboot/boot.scr
 UBOOT_UENV	= build/$(NAME).uboot/uEnv.txt
 LINUX_UIMAGE	= build/$(NAME).linux/uImage
 
+# files to put on sd boot partition
+SD_BOOT_CONTENTS	= $(BOOTBIN) $(UBOOT_SCR) $(UBOOT_UENV) $(LINUX_UIMAGE)
+
+
 ################################################################################
 # Errors
 $(XPR):
@@ -117,6 +121,6 @@ run-uboot: $(UBOOT_ELF) $(PS7INIT_TCL)
 
 ################################################################################
 # SDCARD utilities
-sdcard: $(BOOTBIN) $(UBOOT_SCR) $(UBOOT_UENV)
+sdcard: $(SD_BOOT_CONTENTS)
 	mkdir -p build/$(NAME).sdcard
-	cp -v $(BOOTBIN) $(UBOOT_SCR) $(UBOOT_UENV) build/$(NAME).sdcard
+	cp -v $(SD_BOOT_CONTENTS) build/$(NAME).sdcard
