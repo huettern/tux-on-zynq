@@ -20,7 +20,11 @@ PROC 	= ps7_cortexa9_0
 
 # uboot version
 # Choos from the releases on https://github.com/Xilinx/u-boot-xlnx/releases
-UBOOT_TAG = xilinx-v2020.1
+UBOOT_TAG 	= xilinx-v2020.1
+
+# Linux kernel version, Major version for correct url on cdn.kernel.org
+LINUX_MAJOR	= v5.x
+LINUX_TAG	= 5.4.61
 
 # How many cores to use during compile
 NPROC 	= $(shell nproc 2> /dev/null || echo 1)
@@ -31,15 +35,21 @@ NPROC 	= $(shell nproc 2> /dev/null || echo 1)
 FBSL_CFLGAS	= -DFSBL_DEBUG_INFO
 
 ################################################################################
-# uboot settings
-UBOOT_CFLAGS = -DDEBUG
-
-################################################################################
 # UBOOT settings
+UBOOT_CFLAGS = -DDEBUG
 
 # for boot.bin
 UBOOT_LOAD		= 0x100000
 UBOOT_STARTUP	= 0x100000
+
+################################################################################
+# linux settings
+LINUX_CFLAGS = 
+
+# load address is where the kernel gets extracted to by u boot
+LINUX_LOAD_ADR	= 0x8000
+# entry point after kernel extraction
+LINUX_ENTRY_ADR	= 0x8000
 
 ################################################################################
 # Executables
@@ -60,6 +70,7 @@ UBOOT 		= build/$(NAME).uboot/u-boot.bin
 UBOOT_ELF	= build/$(NAME).uboot/u-boot.elf
 UBOOT_SCR	= build/$(NAME).uboot/boot.scr
 UBOOT_UENV	= build/$(NAME).uboot/uEnv.txt
+LINUX_UIMAGE	= build/$(NAME).linux/uImage
 
 ################################################################################
 # Errors
@@ -82,7 +93,11 @@ fsbl: $(FSBL)
 # uboot bootloader
 UBOOT_DIR = uboot
 include $(UBOOT_DIR)/uboot.make
-# uboot: $(UBOOT)
+
+################################################################################
+# linux kernel
+LINUX_DIR = linux
+include $(LINUX_DIR)/linux.make
 
 ################################################################################
 # BOOT binay
