@@ -7,6 +7,7 @@ NAME	= zturn
 
 # Board name for all board specific fils in the boards folder
 BOARD 	= zturn-7010
+include boards/$(BOARD)/board.make
 
 # Path to the vivado project
 XPR		= $$HOME/git/zynq-sandbox/fpga/hlx/build/projects/zturn-lcd-vdma.xpr
@@ -25,6 +26,9 @@ UBOOT_TAG 	= xilinx-v2020.1
 # Linux kernel version, Major version for correct url on cdn.kernel.org
 LINUX_MAJOR	= v5.x
 LINUX_TAG	= 5.4.61
+
+# device tree utilities, fetched from https://github.com/Xilinx/device-tree-xlnx/archive/$(DTREE_TAG).tar.gz
+DTREE_TAG	= xilinx-v2020.1
 
 # How many cores to use during compile
 NPROC 	= $(shell nproc 2> /dev/null || echo 1)
@@ -71,19 +75,18 @@ UBOOT_ELF	= build/$(NAME).uboot/u-boot.elf
 UBOOT_SCR	= build/$(NAME).uboot/boot.scr
 UBOOT_UENV	= build/$(NAME).uboot/uEnv.txt
 LINUX_UIMAGE	= build/$(NAME).linux/uImage
+DTREE_SYSTEM	= build/$(NAME).dtree/system/system-top.dts
+DTREE_USER		= build/$(NAME).dtree/$(notdir $(DTREE_USER_SRC))
+DTREE_DTB 		= build/$(NAME).dtree/devicetree.dtb
 
 # files to put on sd boot partition
-SD_BOOT_CONTENTS	= $(BOOTBIN) $(UBOOT_SCR) $(UBOOT_UENV) $(LINUX_UIMAGE)
+SD_BOOT_CONTENTS	= $(BOOTBIN) $(UBOOT_SCR) $(UBOOT_UENV) $(LINUX_UIMAGE) $(DTREE_DTB)
 
 
 ################################################################################
 # Errors
 $(XPR):
 	$(error Vivado HLx project not found.)
-
-################################################################################
-# Include board specifig variables
-include boards/$(BOARD)/board.make
 
 ################################################################################
 # XSA and FSBL
@@ -102,6 +105,11 @@ include $(UBOOT_DIR)/uboot.make
 # linux kernel
 LINUX_DIR = linux
 include $(LINUX_DIR)/linux.make
+
+################################################################################
+# device tree
+DTREE_DIR = dtree
+include $(DTREE_DIR)/dtree.make
 
 ################################################################################
 # BOOT binay

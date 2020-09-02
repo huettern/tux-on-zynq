@@ -11,6 +11,7 @@ LINUX_SIGN_URL	= https://cdn.kernel.org/pub/linux/kernel/$(LINUX_MAJOR)/linux-$(
 # linux build products
 LINUX_CONFIG 	= $(LINUX_REPO)/.config
 LINUX_ZIMAGE	= $(LINUX_REPO)/arch/arm/boot/zImage
+DTC 			= $(LINUX_REPO)/scripts/dtc/dtc
 
 ################################################################################
 # settings
@@ -65,6 +66,11 @@ linux-zimage: $(LINUX_ZIMAGE)
 $(LINUX_ZIMAGE): $(LINUX_REPO_STMP) $(LINUX_CONFIG)
 	make -C $(LINUX_REPO) -j$(NPROC) ARCH=arm CROSS_COMPILE=$(LINUX_CROSS_COMPILE) \
 		CFLAGS="$(LINUX_CFLAGS)" zImage
+
+# build device tree compiler
+$(DTC): $(LINUX_REPO_STMP) $(LINUX_CONFIG)
+	make -C $(LINUX_REPO) ARCH=arm CROSS_COMPILE=$(LINUX_CROSS_COMPILE) \
+		CFLAGS="$(LINUX_CFLAGS)" scripts_dtc
 
 # generate bootable image for u boot
 linux-uimage: $(LINUX_UIMAGE)
