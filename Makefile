@@ -30,6 +30,12 @@ LINUX_TAG	= 5.4.61
 # device tree utilities, fetched from https://github.com/Xilinx/device-tree-xlnx/archive/$(DTREE_TAG).tar.gz
 DTREE_TAG	= xilinx-v2020.1
 
+# If using buildroot, specify version here
+BUILDROOT_TAG	= 2020.08
+
+################################################################################
+# build settings
+
 # How many cores to use during compile
 NPROC 	= $(shell nproc 2> /dev/null || echo 1)
 # NPROC 	= 1
@@ -78,9 +84,11 @@ LINUX_UIMAGE	= build/$(NAME).linux/uImage
 DTREE_SYSTEM	= build/$(NAME).dtree/system/system-top.dts
 DTREE_USER		= build/$(NAME).dtree/$(notdir $(DTREE_USER_SRC))
 DTREE_DTB 		= build/$(NAME).dtree/devicetree.dtb
+BUILDROOT_UIMAGE	= build/$(NAME).buildroot/uInitrd
 
 # files to put on sd boot partition
-SD_BOOT_CONTENTS	= $(BOOTBIN) $(UBOOT_SCR) $(UBOOT_UENV) $(LINUX_UIMAGE) $(DTREE_DTB)
+SD_BOOT_CONTENTS	= $(BOOTBIN) $(UBOOT_SCR) $(UBOOT_UENV) \
+	$(LINUX_UIMAGE) $(DTREE_DTB) $(BUILDROOT_UIMAGE)
 
 
 ################################################################################
@@ -117,6 +125,11 @@ BOOTBIN_DIR = bootbin
 include $(BOOTBIN_DIR)/bootbin.make
 bootbin: $(BOOTBIN)
 bootbif: $(BOOTBIF)
+
+################################################################################
+# buildroot
+BUILDROOT_DIR = buildroot
+include $(BUILDROOT_DIR)/buildroot.make
 
 
 ################################################################################
