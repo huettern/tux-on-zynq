@@ -18,7 +18,7 @@ BUILDROOT_CROSS_COMPILE	= arm-linux-gnueabihf-
 ################################################################################
 # phony targets
 .PHONY: buildroot-tar buildroot-repo buildroot-xconfig buildroot-menuconfig buildroot-mrproper 
-.PHONY:	buildroot-configure buildroot-savedefconfig clean-buildroot-repo buildroot-all
+.PHONY:	buildroot-configure buildroot-savedefconfig clean-buildroot-repo buildroot-all buildroot-uinitrd
 
 ################################################################################
 # downloads
@@ -67,10 +67,10 @@ $(BUILDROOT_ROOTFS): $(BUILDROOT_CONFIG)
 # 		CFLAGS="$(BUILDROOT_CFLAGS)" scripts_dtc
 
 # generate bootable image for u boot
-buildroot-uimage: $(BUILDROOT_UIMAGE)
-$(BUILDROOT_UIMAGE): $(BUILDROOT_ROOTFS)
+buildroot-uinitrd: $(BUILDROOT_UINITRD)
+$(BUILDROOT_UINITRD): $(BUILDROOT_ROOTFS)
 	mkimage -A arm -T ramdisk -C gzip -n "Buildroot rootfs" \
-		-d $(BUILDROOT_ROOTFS) $(BUILDROOT_UIMAGE)
+		-d $(BUILDROOT_ROOTFS) $(BUILDROOT_UINITRD)
 
 ################################################################################
 # clean

@@ -10,5 +10,14 @@ LINUX_DEFCONFIG		= linux/myir-zturn-7010_defconfig
 DTREE_USER_SRC		= dtree/myir-zturn-7010.dts
 DTREE_BOOT_ARGS 	= "console=ttyPS0,115200 earlyprintk"
 
+# Select which initramfs should be created
+# - buildroot
+# - busybox
+INIT_CHOICE			= buildroot
+
 # buildroot
 BUILDROOT_DEFCONFIG	= buildroot/myir-zturn-7010_defconfig
+
+# busybox
+BUSYBOX_DEFCONFIG	= busybox/myir-zturn-7010_config
+BUSYBOX_RCS 		= busybox/rcS

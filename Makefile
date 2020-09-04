@@ -33,6 +33,9 @@ DTREE_TAG	= xilinx-v2020.1
 # If using buildroot, specify version here
 BUILDROOT_TAG	= 2020.08
 
+# If using busybox, specify version here
+BUSYBOX_TAG		= 1.32.0
+
 ################################################################################
 # build settings
 
@@ -84,12 +87,12 @@ LINUX_UIMAGE	= build/$(NAME).linux/uImage
 DTREE_SYSTEM	= build/$(NAME).dtree/system/system-top.dts
 DTREE_USER		= build/$(NAME).dtree/$(notdir $(DTREE_USER_SRC))
 DTREE_DTB 		= build/$(NAME).dtree/devicetree.dtb
-BUILDROOT_UIMAGE	= build/$(NAME).buildroot/uInitrd
+BUILDROOT_UINITRD	= build/$(NAME).buildroot/uInitrd
+BUSYBOX_UINITRD		= build/$(NAME).busybox/uInitrd
 
 # files to put on sd boot partition
 SD_BOOT_CONTENTS	= $(BOOTBIN) $(UBOOT_SCR) $(UBOOT_UENV) \
-	$(LINUX_UIMAGE) $(DTREE_DTB) $(BUILDROOT_UIMAGE)
-
+	$(LINUX_UIMAGE) $(DTREE_DTB) 
 
 ################################################################################
 # Errors
@@ -128,8 +131,19 @@ bootbif: $(BOOTBIF)
 
 ################################################################################
 # buildroot
+ifeq ($(INIT_CHOICE), buildroot)
 BUILDROOT_DIR = buildroot
+SD_BOOT_CONTENTS += $(BUILDROOT_UINITRD)
 include $(BUILDROOT_DIR)/buildroot.make
+endif
+
+################################################################################
+# busybox
+ifeq ($(INIT_CHOICE), busybox)
+BUSYBOX_DIR = busybox
+SD_BOOT_CONTENTS += $(BUSYBOX_UINITRD)
+include $(BUSYBOX_DIR)/busybox.make
+endif
 
 
 ################################################################################
@@ -143,5 +157,6 @@ run-uboot: $(UBOOT_ELF) $(PS7INIT_TCL)
 ################################################################################
 # SDCARD utilities
 sdcard: $(SD_BOOT_CONTENTS)
+	rm -r build/$(NAME).sdcard
 	mkdir -p build/$(NAME).sdcard
 	cp -v $(SD_BOOT_CONTENTS) build/$(NAME).sdcard
