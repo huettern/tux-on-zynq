@@ -21,6 +21,14 @@ make savedefconfig
 
 and store the generated `defconfig` file in the corresponding `boards/name/uboot` folder.
 
+## Literature
+
+On minimal linux systems with kernel & initramfs:
+- https://medium.com/@kiky.tokamuro/creating-initramfs-5cca9b524b5a
+- https://gist.github.com/chrisdone/02e165a0004be33734ac2334f215380e
+
+Zynq Linux device drivers:
+- https://www.youtube.com/watch?v=h-ZP98qhEM8
 
 ## Knowledge
 
